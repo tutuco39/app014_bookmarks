@@ -1,10 +1,51 @@
-<p style="color: green"><%= notice %></p>
+<div class="container py-3">
+  <%= link_to "Back", bookmarks_path, class: "btn btn-outline-secondary mb-3" %>
 
-<%= render @bookmark %>
+  <div class="card shadow-sm border-0 bm-show-card">
+    <div class="ratio ratio-16x9 bm-show-thumb">
+      <img src="<%= bookmark_thumb(@bookmark) %>" alt="" class="w-100 h-100 object-fit-cover rounded-top-4">
+    </div>
 
-<div>
-  <%= link_to "Edit this bookmark", edit_bookmark_path(@bookmark) %> |
-  <%= link_to "Back to bookmarks", bookmarks_path %>
+    <div class="card-body">
+      <div class="d-flex align-items-start gap-2 mb-2">
+        <%# favicon %>
+        <% host = (URI.parse(@bookmark.url).host rescue nil) %>
+        <% if host.present? %>
+          <img src="https://www.google.com/s2/favicons?sz=64&domain=<%= host %>" alt="" width="20" height="20" class="rounded mt-1">
+        <% end %>
 
-  <%= button_to "Destroy this bookmark", @bookmark, method: :delete %>
+        <div class="flex-grow-1">
+          <div class="text-muted small"><%= display_date(@bookmark.created_at) %></div>
+          <h1 class="h5 my-1">
+            <%= @bookmark.title.presence || host || "No title" %>
+          </h1>
+          <div class="small">
+            <%= link_to @bookmark.url, @bookmark.url, target: "_blank", rel: "noopener", class: "text-muted text-decoration-none" %>
+          </div>
+        </div>
+      </div>
+
+      <% if @bookmark.memo.present? %>
+        <p class="mt-3 mb-0"><%= simple_format(@bookmark.memo) %></p>
+      <% end %>
+
+      <%# タグ実装済なら表示（無ければ自動でスキップ） %>
+      <% if @bookmark.respond_to?(:tags) && @bookmark.tags.any? %>
+        <div class="mt-3 d-flex flex-wrap gap-1">
+          <% @bookmark.tags.each do |tag| %>
+            <span class="badge bm-badge"><%= tag.name %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="card-footer bg-white d-flex flex-wrap gap-2 justify-content-between">
+      <div class="d-flex gap-2">
+        <%= link_to "Edit", edit_bookmark_path(@bookmark), class: "btn btn-outline-primary btn-sm" %>
+        <%= button_to "Delete", @bookmark, method: :delete,
+              form: { data: { turbo_confirm: "Delete this bookmark?" } },
+              class: "btn btn-outline-danger btn-sm" %>
+      </div>
+    </div>
+  </div>
 </div>
