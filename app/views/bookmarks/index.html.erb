@@ -1,16 +1,45 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Bookmarks" %>
-
-<h1>Bookmarks</h1>
-
-<div id="bookmarks">
-  <% @bookmarks.each do |bookmark| %>
-    <%= render bookmark %>
-    <p>
-      <%= link_to "Show this bookmark", bookmark %>
-    </p>
-  <% end %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 m-0">Bookmarks</h1>
+  <%= link_to "New", new_bookmark_path, class: "btn btn-primary" %>
 </div>
 
-<%= link_to "New bookmark", new_bookmark_path %>
+<div class="card mb-3">
+  <div class="card-body">
+    <%= form_with url: bookmarks_path, method: :get, local: true, class: "row g-2" do %>
+      <div class="col-12 col-md-10">
+        <input type="search" name="q" value="<%= params[:q] %>" class="form-control" placeholder="タイトル／メモで検索">
+      </div>
+      <div class="col-12 col-md-2 d-grid">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @bookmarks.any? %>
+  <div class="row g-3">
+    <% @bookmarks.each do |bookmark| %>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card bm-card h-100 shadow-sm">
+          <div class="ratio ratio-16x9 bm-thumb-wrap">
+            <!-- サムネは後でOG画像に差し替え可。暫定は空のプレース -->
+            <div class="bm-thumb-placeholder"></div>
+          </div>
+          <div class="card-body">
+            <h2 class="h6 card-title mb-1">
+              <%= link_to (bookmark.title.presence || URI.parse(bookmark.url).host rescue bookmark.url.first(50)),
+                          bookmark_path(bookmark),
+                          class: "stretched-link text-decoration-none bm-title" %>
+            </h2>
+            <div class="text-truncate small text-muted"><%= bookmark.url %></div>
+            <% if bookmark.memo.present? %>
+              <p class="card-text bm-memo mt-2"><%= truncate(bookmark.memo, length: 100) %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="alert alert-secondary">まだブックマークがありません。</div>
+<% end %>
