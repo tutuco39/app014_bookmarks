@@ -35,3 +35,11 @@ body{ background: var(--bm-bg); }
 /* Bootstrapのprimary色を少しだけ紫寄りに（CDNテーマでも上書き可能） */
 .btn-primary{ background-color: var(--bm-purple-600); border-color: var(--bm-purple-600); }
 .btn-primary:hover{ background-color: var(--bm-purple); border-color: var(--bm-purple); }
+
+.bm-show-card{ border-radius: 16px; overflow: hidden; }
+.bm-show-thumb{ border-bottom: 1px solid rgba(124,77,255,.08); }
+.bm-badge{
+  background: rgba(124,77,255,.12);
+  color:#673AB7;
+  border:1px solid rgba(124,77,255,.25);
+}
