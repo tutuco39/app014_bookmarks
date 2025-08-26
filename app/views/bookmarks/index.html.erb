@@ -22,8 +22,14 @@
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card bm-card h-100 shadow-sm">
           <div class="ratio ratio-16x9 bm-thumb-wrap">
-            <!-- サムネは後でOG画像に差し替え可。暫定は空のプレース -->
+
             <div class="bm-thumb-placeholder"></div>
+            <% if bookmark.thumbnail_url.present? %>
+              <img src="<%= bookmark.thumbnail_url %>" class="card-img-top" alt="">
+            <% else %>
+              <img src="https://placehold.co/400x200/7C4DFF/FFFFFF?text=No+Image" class="card-img-top" alt="">
+            <% end %>
+
           </div>
           <div class="card-body">
             <h2 class="h6 card-title mb-1">
